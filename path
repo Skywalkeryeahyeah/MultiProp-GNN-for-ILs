@@ -1,0 +1,11 @@
+IL_Project/
+├── app2.py
+├── models_lib.py
+├── weights/
+└── templates/
+    ├── index.html
+    ├── density.html
+    ├── heat.html
+    ├── solubility.html
+    └── surface.html
+    └── old_index.html
