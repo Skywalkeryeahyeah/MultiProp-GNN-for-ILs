@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Bicheng"
+    given-names: "Huang"
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+title: "MultiProp-GNN: A Versatile GNN Framework and Full-Stack Platform for High-Precision Ionic Liquid Property Prediction"
+version: 1.0.0
+date-released: 2026-08-19
+url: "https://github.com/Skywalkeryeahyeah/MultiProp-GNN-for-ILs"
