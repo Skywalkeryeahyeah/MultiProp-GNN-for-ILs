@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNN-IL | Other Property Models</title>
+    <link href="https://cdn.bootcdn.net/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root { 
+            --academic-blue: #001f3f; /* 学术深蓝 (Oxford Blue) */
+            --border-color: #dee2e6; 
+            --bg-gray: #f8f9fa; 
+        }
+
+        /* 全局强制 Times New Roman */
+        body, input, button, select, textarea { 
+            font-family: "Times New Roman", Times, serif !important; 
+            background-color: #ffffff; 
+            color: #212529; 
+        }
+
+        .header-bar { border-bottom: 2px solid var(--academic-blue); padding: 20px 0; margin-bottom: 40px; background: #fff; }
+        .system-title { color: var(--academic-blue); font-weight: 700; font-size: 1.75rem; margin: 0; cursor: pointer; text-decoration: none; }
+        
+        .academic-card { border: 1px solid var(--border-color); border-radius: 4px; padding: 40px; background: #fff; }
+        .section-title { font-size: 1.1rem; font-weight: 600; color: var(--academic-blue); border-left: 4px solid var(--academic-blue); padding-left: 12px; margin-bottom: 25px; text-transform: uppercase; }
+
+        /* 学术提示框 */
+        .notice-panel { 
+            background-color: var(--bg-gray); 
+            border: 1px solid var(--border-color); 
+            border-left: 4px solid var(--academic-blue); 
+            padding: 30px; 
+            margin-bottom: 35px; 
+        }
+        
+        .notice-header { font-size: 1.3rem; font-weight: 700; color: var(--academic-blue); margin-bottom: 12px; }
+        .notice-text { color: #495057; font-size: 1rem; line-height: 1.7; margin: 0; }
+
+        /* 表格排版 */
+        .academic-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .academic-table th, .academic-table td { padding: 14px 18px; border-bottom: 1px solid var(--border-color); text-align: left; }
+        .academic-table th { background-color: var(--bg-gray); color: var(--academic-blue); font-weight: 700; text-transform: uppercase; font-size: 0.9rem; }
+        .academic-table td { font-size: 0.95rem; }
+
+        /* 返回按钮 */
+        .btn-back { 
+            background-color: var(--academic-blue); 
+            border: none; 
+            color: white; 
+            padding: 12px 35px; 
+            font-weight: 600; 
+            border-radius: 2px; 
+            transition: 0.2s; 
+            letter-spacing: 1px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-back:hover { background-color: #001122; color: #fff; }
+
+        .stats-footer { margin-top: 40px; font-size: 0.85rem; color: #adb5bd; border-top: 1px solid #eee; padding-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="header-bar">
+    <div class="container d-flex align-items-center">
+        <a href="/" class="system-title">Ionic Liquid Property Prediction System</a>
+        <span class="ms-auto badge bg-warning text-dark" style="font-family: Arial;">Status: Under Construction</span>
+    </div>
+</div>
+
+<div class="container">
+    <div class="academic-card">
+        <div class="section-title">Extended Thermodynamic & Transport Property Models</div>
+
+        <!-- 学术提示区域 -->
+        <div class="notice-panel">
+            <div class="notice-header">MODULE UNDER ACTIVE DEVELOPMENT</div>
+            <p class="notice-text">
+                This section is dedicated to extended thermodynamic, transport, and interfacial property models for ionic liquids. 
+                Machine learning architectures (Graph Attention Networks & Transformer-based molecular encoders) for these additional target properties are currently undergoing data curation, hyperparameter optimization, and experimental validation.
+            </p>
+        </div>
+
+        <!-- 拟上线模型开发路线表 -->
+        <div class="mb-4">
+            <h5 style="color: var(--academic-blue); font-weight: 600;" class="mb-3">Planned Model Integration Roadmap</h5>
+            <table class="academic-table">
+                <thead>
+                    <tr>
+                        <th>Target Property</th>
+                        <th>Symbol</th>
+                        <th>Target Unit</th>
+                        <th>Development Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Dynamic Viscosity</strong></td>
+                        <td>η</td>
+                        <td>mPa·s</td>
+                        <td><span class="badge bg-primary" style="font-family: Arial;">Model Training</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Electrical Conductivity</strong></td>
+                        <td>σ<sub>e</sub></td>
+                        <td>S/m</td>
+                        <td><span class="badge bg-secondary" style="font-family: Arial;">Data Curation</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Thermal Conductivity</strong></td>
+                        <td>λ</td>
+                        <td>W/(m·K)</td>
+                        <td><span class="badge bg-secondary" style="font-family: Arial;">Data Curation</span></td>
+                    </tr>
+                    <tr>
+                        <td><strong>Refractive Index</strong></td>
+                        <td>n<sub>D</sub></td>
+                        <td>—</td>
+                        <td><span class="badge bg-outline-dark text-muted" style="font-family: Arial; border: 1px solid #ccc;">Planned</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pt-3 text-end">
+            <a href="/" class="btn-back">RETURN TO HUB</a>
+        </div>
+
+        <div class="stats-footer text-center">
+            <div>Framework: MultiProp-GNN | Molecular Featurizer: RDKit</div>
+            <div>Integrated GNN Framework for Ionic Liquids Research © 2026</div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

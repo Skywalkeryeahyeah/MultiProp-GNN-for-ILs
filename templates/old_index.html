@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IL-Prop GNN Predictor</title>
+    <style>
+        body { font-family: 'Times New Roman', serif; background-color: #f4f7f6; color: #333; margin: 40px; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 15px rgba(0,0,0,0.1); border: 1px solid #dcdcdc; }
+        h2 { text-align: center; color: #2c3e50; border-bottom: 2px solid #2c3e50; padding-bottom: 10px; }
+        .input-group { margin-bottom: 20px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; color: #34495e; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-size: 14px; }
+        button { width: 100%; padding: 12px; background-color: #2c3e50; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.3s; }
+        button:hover { background-color: #34495e; }
+        #result-box { margin-top: 30px; padding: 20px; border: 1px dashed #2c3e50; background: #f9f9f9; display: none; text-align: center; }
+        .val { font-size: 24px; color: #e74c3c; font-weight: bold; }
+        .unit { color: #7f8c8d; margin-left: 5px; }
+        .footer { text-align: center; font-size: 12px; color: #95a5a6; margin-top: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Ionic Liquid Property Prediction Platform</h2>
+    
+    <div class="input-group">
+        <label>Target Property</label>
+        <select id="propType" onchange="toggleInputs()">
+            <option value="surface">Surface Tension (σ)</option>
+            <option value="density">Density (ρ)</option>
+            <option value="heat">Heat Capacity (Cp)</option>
+            <option value="solubility">Gas Solubility (x)</option>
+        </select>
+    </div>
+
+    <div class="input-group">
+        <label>Cation SMILES</label>
+        <input type="text" id="cation" placeholder="e.g. CCCCn1cc[n+](C)c1">
+    </div>
+
+    <div class="input-group">
+        <label>Anion SMILES</label>
+        <input type="text" id="anion" placeholder="e.g. F[B-](F)(F)F">
+    </div>
+
+    <div style="display: flex; gap: 10px;">
+        <div class="input-group" style="flex: 1;">
+            <label>Temperature (K)</label>
+            <input type="number" id="temp" value="298.15" step="0.01">
+        </div>
+        <div class="input-group" style="flex: 1;" id="press-group">
+            <label>Pressure (MPa)</label>
+            <input type="number" id="press" value="0.1" step="0.01">
+        </div>
+        <div class="input-group" style="flex: 1;">
+            <label id="x-label">Mole Fraction (x)</label>
+            <input type="number" id="frac" value="1.0" step="0.001">
+        </div>
+    </div>
+
+    <button onclick="runPrediction()">Calculate Prediction</button>
+
+    <div id="result-box">
+        <div style="font-size: 16px; margin-bottom: 10px;">Predicted Value:</div>
+        <span class="val" id="resVal">--</span>
+        <span class="unit" id="resUnit"></span>
+    </div>
+
+    <div class="footer">Methodology: GAT-based Graph Neural Network + MLP Fusion Architecture</div>
+</div>
+
+<script>
+    function toggleInputs() {
+        const type = document.getElementById('propType').value;
+        const pressGroup = document.getElementById('press-group');
+        const xLabel = document.getElementById('x-label');
+
+        // 表面张力模型通常不涉及高压环境
+        pressGroup.style.display = (type === 'surface') ? 'none' : 'block';
+        
+        // 动态修改 X 的标签含义
+        if (type === 'solubility') {
+            xLabel.innerText = "Fugacity (MPa) / Param";
+        } else {
+            xLabel.innerText = "Mole Fraction (x)";
+        }
+    }
+
+    async function runPrediction() {
+        const payload = {
+            type: document.getElementById('propType').value,
+            cation_smiles: document.getElementById('cation').value,
+            anion_smiles: document.getElementById('anion').value,
+            T: document.getElementById('temp').value,
+            P: document.getElementById('press').value,
+            X: document.getElementById('frac').value
+        };
+
+        const resBox = document.getElementById('result-box');
+        resBox.style.display = 'block';
+        document.getElementById('resVal').innerText = "Calculating...";
+
+        try {
+            const response = await fetch('/predict', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                document.getElementById('resVal').innerText = data.value;
+                const units = {surface: 'mN/m', density: 'kg/m³', heat: 'J/(mol·K)', solubility: 'mole fraction'};
+                document.getElementById('resUnit').innerText = units[payload.type];
+            } else {
+                alert("Error: " + data.message);
+            }
+        } catch (e) {
+            alert("Connection Failed!");
+        }
+    }
+    toggleInputs(); // 初始化
+</script>
+
+</body>
+</html>
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ionic Liquid Property GNN Hub</title>
+    <style>
+        :root { --main-color: #2c3e50; --accent-color: #34495e; --hover-color: #3498db; }
+        
+        /* 全局使用 Times New Roman */
+        body { 
+            font-family: 'Times New Roman', Times, serif; 
+            background: #fdfdfd; 
+            margin: 0; 
+            color: var(--main-color);
+            line-height: 1.6;
+        }
+
+        /* 顶部标题区 */
+        header { 
+            padding: 80px 20px 40px; 
+            text-align: center; 
+        }
+        header h1 { 
+            font-size: 2.8em; 
+            margin: 0; 
+            font-weight: 500; 
+            letter-spacing: 1px;
+        }
+        header p { 
+            font-size: 1.2em; 
+            margin-top: 10px; 
+            color: #7f8c8d; 
+        }
+
+        /* 贯穿横线设计 */
+        .separator-container {
+            width: 80%;
+            max-width: 900px;
+            margin: 20px auto;
+            position: relative;
+        }
+        .horizontal-line {
+            height: 2px;
+            background-color: var(--main-color);
+            width: 100%;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .horizontal-line:hover {
+            background-color: var(--hover-color);
+            transform: scaleY(1.5);
+        }
+
+        /* 悬浮作者信息 */
+        .author-tooltip {
+            visibility: hidden;
+            width: 250px;
+            background-color: #fff;
+            color: var(--main-color);
+            text-align: center;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 4px;
+            position: absolute;
+            z-index: 10;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        .separator-container:hover .author-tooltip {
+            visibility: visible;
+            opacity: 1;
+        }
+        .author-tooltip h4 { margin: 0 0 5px; font-size: 1.1em; }
+        .author-tooltip p { margin: 0; font-size: 0.9em; color: #666; }
+
+        /* 卡片网格布局 */
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 320px); 
+            gap: 40px; 
+            justify-content: center; 
+            margin-top: 60px; 
+            padding-bottom: 100px;
+        }
+        .card { 
+            background: #fff; 
+            padding: 40px 20px; 
+            border: 1px solid #eee; 
+            text-align: center; 
+            cursor: pointer; 
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
+        }
+        /* 经典科研卡片悬浮：变暗色背景+白色文字 */
+        .card:hover { 
+            background: var(--main-color);
+            border-color: var(--main-color);
+            transform: translateY(-5px);
+        }
+        .card:hover h3, .card:hover .icon { color: #fff; }
+        
+        .icon { font-size: 45px; margin-bottom: 20px; display: block; color: var(--main-color); }
+        h3 { 
+            font-size: 1.6em; 
+            margin: 10px 0; 
+            font-weight: 500;
+        }
+        .card p { font-size: 0.9em; color: #7f8c8d; transition: 0.3s; }
+        .card:hover p { color: #bdc3c7; }
+
+        footer { font-size: 0.8em; color: #bdc3c7; margin-bottom: 30px; text-align: center; }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Ionic Liquid Property Hub</h1>
+    <p>Machine Learning Assisted Physicochemical Prediction Platform</p>
+    
+    <div class="separator-container">
+        <div class="horizontal-line"></div>
+        <div class="author-tooltip">
+            <h4>Skywalker Team</h4>
+            <p>Produced by Skywalker</p>
+            <p>Contact: Skywalker Huang</p>
+        </div>
+    </div>
+</header>
+
+<div class="grid">
+    <div class="card" onclick="location.href='/density'">
+        <span class="icon">⚖</span>
+        <h3>Density</h3>
+        <p>Mass per unit volume estimation (ρ)</p>
+    </div>
+    <div class="card" onclick="location.href='/heat'">
+        <span class="icon">♨</span>
+        <h3>Heat Capacity</h3>
+        <p>Isobaric heat capacity (C<sub>p</sub>)</p>
+    </div>
+    <div class="card" onclick="location.href='/solubility'">
+        <span class="icon">☣</span>
+        <h3>Solubility</h3>
+        <p>Gas absorption mole fraction (x)</p>
+    </div>
+    <div class="card" onclick="location.href='/surface'">
+        <span class="icon">☍</span>
+        <h3>Surface Tension</h3>
+        <p>Interfacial tension prediction (σ)</p>
+    </div>
+</div>
+
+<footer>
+    © 2026 Integrated GNN Framework for Ionic Liquids Research
+</footer>
+
+</body>
+</html>
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ionic Liquid Property GNN Hub</title>
+    <style>
+        :root { 
+            --main-color: #001f3f; /* 学术深蓝 */
+            --hover-bg: #001f3f;
+            --text-gray: #555;
+        }
+        
+        /* 强制全局 Times New Roman */
+        * {
+            font-family: 'Times New Roman', Times, serif !important;
+        }
+
+        body { 
+            background: #ffffff; 
+            margin: 0; 
+            color: var(--main-color);
+            line-height: 1.6;
+        }
+
+        /* 顶部标题区 */
+        header { 
+            padding: 80px 20px 20px; 
+            text-align: center; 
+        }
+        header h1 { 
+            font-size: 2.8rem;
+            margin: 0; 
+            font-weight: 700; 
+            letter-spacing: 1px;
+        }
+        header p { 
+            font-size: 1.2rem; 
+            margin-top: 10px; 
+            color: var(--text-gray);
+        }
+
+        /* 横线容器：占页面 80% 并居中 */
+        .separator-outer {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .more-trigger {
+            font-size: 1rem;
+            color: var(--main-color);
+            cursor: pointer;
+            display: inline-block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .horizontal-line {
+            height: 2px;
+            background-color: var(--main-color);
+            width: 80%; /* 关键修改：占页面 80% */
+            transition: all 0.3s ease;
+        }
+
+        /* 悬浮作者信息框 */
+        .author-tooltip {
+            visibility: hidden;
+            width: 260px;
+            background-color: #fff;
+            color: var(--main-color);
+            text-align: center;
+            border: 1px solid var(--main-color);
+            padding: 15px;
+            position: absolute;
+            z-index: 10;
+            bottom: 45px; /* 位于 More 文字上方 */
+            left: 50%;
+            transform: translateX(-50%);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .separator-outer:hover .author-tooltip {
+            visibility: visible;
+            opacity: 1;
+            bottom: 55px;
+        }
+
+        .separator-outer:hover .horizontal-line {
+            background-color: #003366;
+            height: 3px;
+        }
+
+        /* 卡片容器与 2x2 网格 */
+        .container {
+            max-width: 900px; 
+            margin: 0 auto;
+            padding: 0 20px 80px;
+        }
+        
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); /* 2个一排 */
+            gap: 30px; 
+            margin-top: 40px; 
+        }
+
+        .card { 
+            background: #fff; 
+            padding: 50px 20px; 
+            border: 1px solid #eee; 
+            text-align: center; 
+            cursor: pointer; 
+            transition: all 0.3s ease;
+        }
+
+        .card:hover { 
+            background: var(--hover-bg);
+            border-color: var(--main-color);
+            transform: translateY(-5px);
+        }
+        
+        .card:hover h3, .card:hover .icon, .card:hover p { color: #fff; }
+        
+        .icon { 
+            font-size: 45px; 
+            margin-bottom: 20px; 
+            display: block; 
+            color: var(--main-color); 
+        }
+        
+        h3 { 
+            font-size: 1.6em; 
+            margin: 10px 0; 
+            font-weight: 600;
+        }
+        
+        .card p { 
+            font-size: 0.95rem; 
+            color: #666; 
+        }
+
+        footer { 
+            font-size: 0.85rem; 
+            color: #999; 
+            padding: 30px 0;
+            text-align: center; 
+        }
+
+        @media (max-width: 600px) {
+            .grid { grid-template-columns: 1fr; } /* 极窄屏幕切换单列 */
+            .horizontal-line { width: 90%; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Ionic Liquid Property Hub</h1>
+    <p>Machine Learning Assisted Physicochemical Prediction Platform</p>
+</header>
+
+<div class="separator-outer">
+    <div class="more-trigger">[ MORE INFO ]</div>
+    <div class="horizontal-line"></div>
+    <div class="author-tooltip">
+        <h4 style="margin:0 0 10px 0; font-weight: bold;">Skywalker Team</h4>
+        <p style="margin:5px 0;">Produced by Skywalker</p>
+        <p style="margin:5px 0;">Contact: Skywalker Huang</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="grid">
+        <div class="card" onclick="location.href='/density'">
+            <span class="icon">⚖</span>
+            <h3>Density</h3>
+            <p>Mass per unit volume estimation (ρ)</p>
+        </div>
+        <div class="card" onclick="location.href='/heat'">
+            <span class="icon">♨</span>
+            <h3>Heat Capacity</h3>
+            <p>Isobaric heat capacity (C<sub>p</sub>)</p>
+        </div>
+        <div class="card" onclick="location.href='/solubility'">
+            <span class="icon">☣</span>
+            <h3>Solubility</h3>
+            <p>Gas absorption mole fraction (x)</p>
+        </div>
+        <div class="card" onclick="location.href='/surface'">
+            <span class="icon">☍</span>
+            <h3>Surface Tension</h3>
+            <p>Interfacial tension prediction (σ)</p>
+        </div>
+    </div>
+</div>
+
+<footer>
+    © 2026 Integrated GNN Framework for Ionic Liquids Research
+</footer>
+
+</body>
+</html>
