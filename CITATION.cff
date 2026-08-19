@@ -5,6 +5,6 @@ authors:
     given-names: "Huang"
     orcid: "https://orcid.org/0000-0000-0000-0000"
 title: "MultiProp-GNN: A Versatile GNN Framework and Full-Stack Platform for High-Precision Ionic Liquid Property Prediction"
-version: 1.0.0
-date-released: 2026-08-19
+version: 2.3.0
+date-released: 2026-08-20
 url: "https://github.com/Skywalkeryeahyeah/MultiProp-GNN-for-ILs"
