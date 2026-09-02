@@ -45,7 +45,7 @@ Currently supported:
 | :--- | :---: | :--- |
 | Mass Density | ρ | kg/m³ |
 | Heat Capacity | Cp | J/(mol·K) |
-| Surface Tension | σ | mN/m |
+| Surface Tension | σ | N/m |
 | CO₂ Solubility | x | mol/mol |
 
 
