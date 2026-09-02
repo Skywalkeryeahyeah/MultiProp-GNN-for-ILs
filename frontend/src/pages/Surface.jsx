@@ -423,7 +423,7 @@ function Surface(){
                         value={result}
 
 
-                        unit="mN / m"
+                        unit="N / m"
 
 
                         loading={loading}
