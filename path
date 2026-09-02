@@ -59,3 +59,7 @@ MultiProp-GNN-ILs
 └── README.md
 
 python -m backend.app
+
+git add backend frontend
+git commit -m "Convert surface tension output unit to N/m"
+git push origin main
