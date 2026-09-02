@@ -1,2 +1,18 @@
+# IDE
+.idea/
+
+# Python
 __pycache__/
 *.pyc
+
+# Node
+node_modules/
+dist/
+
+# Model weights
+weights/
+*.pth
+*.pkl
+
+# Environment
+.env
