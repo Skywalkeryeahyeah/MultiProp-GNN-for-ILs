@@ -1,11 +1,61 @@
-IL_Project/
-├── app2.py
-├── models_lib.py
-├── weights/
-└── templates/
-    ├── index.html
-    ├── density.html
-    ├── heat.html
-    ├── solubility.html
-    └── surface.html
-    └── old_index.html
+MultiProp-GNN-ILs
+│
+├── backend
+│   │
+│   ├── app.py
+│   │       Flask服务入口
+│   │
+│   ├── models_lib.py
+│   │       GNN模型定义
+│   │       RDKit特征提取
+│   │
+│   └── __init__.py
+│
+│
+├── frontend
+│   │
+│   ├── src
+│   │   │
+│   │   ├── main.jsx
+│   │   │       React入口
+│   │   │
+│   │   ├── App.jsx
+│   │   │       页面路由管理
+│   │   │
+│   │   ├── pages
+│   │   │   │
+│   │   │   ├── Home.jsx
+│   │   │   ├── Density.jsx
+│   │   │   ├── Heat.jsx
+│   │   │   ├── Surface.jsx
+│   │   │   └── Solubility.jsx
+│   │   │
+│   │   ├── components
+│   │   │   │
+│   │   │   ├── Header.jsx
+│   │   │   ├── PropertyCard.jsx
+│   │   │   └── ResultPanel.jsx
+│   │   │
+│   │   └── styles
+│   │       │
+│   │       ├── global.css
+│   │       ├── home.css
+│   │       └── prediction.css
+│   │
+│   └── package.json
+│
+│
+├── weights
+│
+│   ├── density
+│   │
+│   ├── heat
+│   │
+│   ├── surface
+│   │
+│   └── solubility
+│
+│
+└── README.md
+
+python -m backend.app

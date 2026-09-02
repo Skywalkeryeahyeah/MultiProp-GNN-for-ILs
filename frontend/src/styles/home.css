@@ -1,0 +1,273 @@
+:root {
+
+    --oxford-blue: #002147;
+
+    --gold-accent: #c4a006;
+
+    --bg-cream: #ffffff;
+
+    --text-main: #1a1a1a;
+
+}
+
+
+
+* {
+
+    font-family: 'Times New Roman', Times, serif !important;
+
+}
+
+
+
+body {
+
+    background: var(--bg-cream);
+
+    margin: 0;
+
+    color: var(--text-main);
+
+    line-height: 1.8;
+
+}
+
+
+
+.top-stripe {
+
+    height: 4px;
+
+    background: var(--oxford-blue);
+
+    width: 100%;
+
+}
+
+
+
+header {
+
+    padding: 80px 20px 40px;
+
+    text-align: center;
+
+}
+
+
+
+header h1 {
+
+    font-size: 3.2rem;
+
+    margin: 0;
+
+    font-weight: 500;
+
+    letter-spacing: 2px;
+
+    color: var(--oxford-blue);
+
+    text-transform: uppercase;
+
+}
+
+
+
+header .sub-title {
+
+    font-size: 1.3rem;
+
+    margin-top: 15px;
+
+    color: #666;
+
+    letter-spacing: 1px;
+
+}
+
+
+
+.main-container {
+
+    max-width: 1000px;
+
+    margin: 0 auto;
+
+    padding: 0 20px 100px;
+
+}
+
+
+
+/* 核心分界线 */
+
+.section-divider {
+
+    display: flex;
+
+    align-items: center;
+
+    margin: 60px 0;
+
+    color: var(--oxford-blue);
+
+    font-size: 0.8rem;
+
+    letter-spacing: 5px;
+
+    text-transform: uppercase;
+
+}
+
+
+
+.section-divider::before,
+
+.section-divider::after {
+
+    content: "";
+
+    flex: 1;
+
+    height: 1px;
+
+    background: #d1d1d1;
+
+}
+
+
+
+.section-divider span {
+
+    padding: 0 20px;
+
+    font-weight: bold;
+
+}
+
+
+
+.grid {
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 1fr);
+
+    gap: 30px;
+
+}
+
+
+
+.card-full {
+
+    grid-column: span 2;
+
+}
+
+
+
+.card {
+
+    background: #fff;
+
+    padding: 40px 30px;
+
+    border: 1px solid #e0e0e0;
+
+    text-align: center;
+
+    cursor: pointer;
+
+    transition: all 0.5s ease;
+
+}
+
+
+
+.card:hover {
+
+    background: var(--oxford-blue);
+
+    border-color: var(--oxford-blue);
+
+    transform: translateY(-5px);
+
+    box-shadow: 0 15px 30px rgba(0,33,71,0.2);
+
+}
+
+
+
+.card:hover h3,
+
+.card:hover .icon,
+
+.card:hover p {
+
+    color: #fff;
+
+}
+
+
+
+.icon {
+
+    font-size: 40px;
+
+    margin-bottom: 20px;
+
+    display: block;
+
+    color: var(--oxford-blue);
+
+    transition: all 0.4s;
+
+}
+
+
+
+h3 {
+
+    font-size: 1.5em;
+
+    margin: 10px 0;
+
+    font-weight: 500;
+
+    letter-spacing: 1px;
+
+}
+
+
+
+.card p {
+
+    font-size: 0.95rem;
+
+    color: #666;
+
+    font-style: italic;
+
+    margin: 0;
+
+}
+
+
+
+footer {
+
+    font-size: 0.9rem;
+
+    color: #777;
+
+    padding: 50px 0;
+
+    text-align: center;
+
+    border-top: 1px solid #eee;
+
+    background: #f9f9f9;
+
+}

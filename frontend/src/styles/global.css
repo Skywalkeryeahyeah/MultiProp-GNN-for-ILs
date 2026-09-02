@@ -1,0 +1,34 @@
+* {
+
+    box-sizing: border-box;
+
+}
+
+
+html,
+body,
+#root {
+
+    width:100%;
+
+    min-height:100%;
+
+    margin:0;
+
+    padding:0;
+
+}
+
+
+body {
+
+    font-family:
+    "Times New Roman",
+    Times,
+    serif;
+
+    background:#ffffff;
+
+    color:#1a1a1a;
+
+}
